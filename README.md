@@ -8,6 +8,7 @@ Algorithm:
 
 1. [Wikipedia](https://en.wikipedia.org/wiki/Particle_swarm_optimization)
 2. [PSO Tutorial](http://www.swarmintelligence.org/tutorials.php)
+3. [Matlab](http://www.mathworks.com/help/gads/particle-swarm.html)
 
 Benchmark Functions:
 
