@@ -40,17 +40,26 @@ classdef particle < handle
         end
 
         function obj = update(obj,omega, phi_p, phi_g)
-           % update position
-           for i = 1:size(obj.x,2)
-               rp = rand();
-               rg = rand();
-               obj.v(i) = omega * obj.v(i) + ...
-                          phi_p * rp * (obj.p(i) - obj.x(i)) + ...
-                          phi_g * rg * (obj.g(i) - obj.x(i));
-               obj.x(i) = obj.x(i) + obj.v(i);
-           end
-           checkbounds(obj);
-           
+            % update position
+            for i = 1:size(obj.x,2)
+                rp = rand();
+                rg = rand();
+                obj.v(i) = omega * obj.v(i) + ...
+                           phi_p * rp * (obj.p(i) - obj.x(i)) + ...
+                           phi_g * rg * (obj.g(i) - obj.x(i));
+                obj.x(i) = obj.x(i) + obj.v(i);
+            end
+            % check bounds
+            for i=1:max(size(obj.x))    
+                if obj.x(i) < obj.c.lb(i)
+                   obj.x(i) = obj.c.lb(i); 
+                end
+                
+                if obj.x(i) > obj.c.ub(i)
+                    obj.x(i) = obj.c.ub(i);
+                end                
+            end
+            
            % check if new p
            obj.fx = obj.c.f(obj.x);
            if obj.fx < obj.fp
@@ -65,17 +74,7 @@ classdef particle < handle
         end
         
         function obj = checkbounds(obj)
-            for i=1:max(size(obj.x))
-                
-                if obj.x(i) < obj.c.lb(i)
-                   obj.x(i) = obj.c.lb(i); 
-                end
-                
-                if obj.x(i) > obj.c.ub(i)
-                    obj.x(i) = obj.c.ub(i);
-                end
-                
-            end
+
         end
 
     end

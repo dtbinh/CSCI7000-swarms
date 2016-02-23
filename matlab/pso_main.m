@@ -2,13 +2,14 @@ close all;
 clear all;
 
 % set variables & particle constants
-%c.f = @func_sphere;
-%c.f = @func_mccormick;
-c.f = @func_matyas;
-%c.f = @func_goldsteinprice;
-c.lb = [-10, -10];
-c.ub = [10, 10];
-num_particles = 10;
+%c.f = @func_sphere; c.lb = [-5, -5]; c.ub = [5, 5];
+%c.f = @func_mccormick; c.lb = [-5, -5]; c.ub = [5, 5];
+%c.f = @func_matyas; c.lb = [-5, -5]; c.ub = [5, 5];
+%c.f = @func_goldsteinprice; c.lb = [-5, -5]; c.ub = [5, 5];
+%c.f = @func_ackleys; c.lb = [-5, -5]; c.ub = [5, 5];
+c.f = @func_eggholder; c.lb = [-500, -500]; c.ub = [500, 500];
+
+num_particles = 100;
 omega = 0.73;
 phi_p = 1.15; 
 phi_g = 1.15;
@@ -26,14 +27,14 @@ for i=1:num_particles
 end
 
 % create 2d plot
-dx = (c.ub(1) - c.lb(1)) / 100;
-dy = (c.ub(2) - c.lb(2)) / 100;
+dx = (c.ub(1) - c.lb(1)) / 200;
+dy = (c.ub(2) - c.lb(2)) / 200;
 x = c.lb(1):dx:c.ub(1);
 y = c.lb(2):dy:c.ub(2);
 z = zeros(max(size(x)),max(size(y)));
 for i = 1:max(size(x))
     for j = 1:max(size(y))
-        z(i,j) = c.f([x(i),y(j)]);
+        z(j,i) = c.f([x(i),y(j)]);
     end
 end
 surf(x,y,z,'EdgeColor','none'); hold on;
