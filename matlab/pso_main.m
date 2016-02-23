@@ -26,7 +26,13 @@ for i=1:num_particles
     end
 end
 
-% create 2d plot
+% get initial points of particles
+for i=1:num_particles
+    particles(i).update_global_best(g_best, fg_best);
+    particle_positions(i,:) = [particles(i).x particles(i).fx];
+end
+
+% create plots
 dx = (c.ub(1) - c.lb(1)) / 200;
 dy = (c.ub(2) - c.lb(2)) / 200;
 x = c.lb(1):dx:c.ub(1);
@@ -37,19 +43,30 @@ for i = 1:max(size(x))
         z(j,i) = c.f([x(i),y(j)]);
     end
 end
+figure(1);
+subplot(2,2,1);
+surf(x,y,z,'EdgeColor','none'); hold on;
+plot_p1 = scatter3(particle_positions(:,1),particle_positions(:,2),particle_positions(:,3),'.g');
+plot_g1 = scatter3(g_best(1),g_best(2),fg_best,'og');
+
+subplot(2,2,2);
 surf(x,y,z,'EdgeColor','none'); hold on;
 view(0,90);
-colorbar;
-xlabel('x_1');
-ylabel('x_2');
+plot_p2 = scatter3(particle_positions(:,1),particle_positions(:,2),particle_positions(:,3),'.g');
+plot_g2 = scatter3(g_best(1),g_best(2),fg_best,'og');
 
-% get initial points of particles
-for i=1:num_particles
-    particles(i).update_global_best(g_best, fg_best);
-    particle_positions(i,:) = [particles(i).x particles(i).fx];
-end
-plot_p = scatter3(particle_positions(:,1),particle_positions(:,2),particle_positions(:,3),'.g');
-plot_g = scatter3(g_best(1),g_best(2),fg_best,'og');
+subplot(2,2,3);
+surf(x,y,z,'EdgeColor','none'); hold on;
+view(0,0);
+plot_p3 = scatter3(particle_positions(:,1),particle_positions(:,2),particle_positions(:,3),'.g');
+plot_g3 = scatter3(g_best(1),g_best(2),fg_best,'og');
+
+subplot(2,2,4);
+surf(x,y,z,'EdgeColor','none'); hold on;
+view(90,0);
+plot_p4 = scatter3(particle_positions(:,1),particle_positions(:,2),particle_positions(:,3),'.g');
+plot_g4 = scatter3(g_best(1),g_best(2),fg_best,'og');
+
 
 % main loop
 for j = 1:50
@@ -63,6 +80,12 @@ for j = 1:50
         particle_positions(i,:) = [particles(i).x particles(i).fx];
     end
     pause(0.25)
-    set(plot_p,'XData',particle_positions(:,1),'YData',particle_positions(:,2),'ZData',particle_positions(:,3));
-    set(plot_g,'XData',g_best(1),'YData',g_best(2),'ZData',fg_best);
+    set(plot_p1,'XData',particle_positions(:,1),'YData',particle_positions(:,2),'ZData',particle_positions(:,3));
+    set(plot_g1,'XData',g_best(1),'YData',g_best(2),'ZData',fg_best);
+    set(plot_p2,'XData',particle_positions(:,1),'YData',particle_positions(:,2),'ZData',particle_positions(:,3));
+    set(plot_g2,'XData',g_best(1),'YData',g_best(2),'ZData',fg_best);
+    set(plot_p3,'XData',particle_positions(:,1),'YData',particle_positions(:,2),'ZData',particle_positions(:,3));
+    set(plot_g3,'XData',g_best(1),'YData',g_best(2),'ZData',fg_best);
+    set(plot_p4,'XData',particle_positions(:,1),'YData',particle_positions(:,2),'ZData',particle_positions(:,3));
+    set(plot_g4,'XData',g_best(1),'YData',g_best(2),'ZData',fg_best);    
 end
