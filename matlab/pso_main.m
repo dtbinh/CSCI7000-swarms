@@ -6,10 +6,10 @@ clear all;
 %c.f = @func_mccormick; c.lb = [-5, -5]; c.ub = [5, 5];
 %c.f = @func_matyas; c.lb = [-5, -5]; c.ub = [5, 5];
 %c.f = @func_goldsteinprice; c.lb = [-5, -5]; c.ub = [5, 5];
-%c.f = @func_ackleys; c.lb = [-5, -5]; c.ub = [5, 5];
-c.f = @func_eggholder; c.lb = [-500, -500]; c.ub = [500, 500];
+c.f = @func_ackleys; c.lb = [-5, -5]; c.ub = [5, 5];
+%c.f = @func_eggholder; c.lb = [-500, -500]; c.ub = [500, 500];
 
-num_particles = 100;
+num_particles = 1000;
 omega = 0.73;
 phi_p = 1.15; 
 phi_g = 1.15;
@@ -24,6 +24,7 @@ for i=1:num_particles
        fg_best = particles(i).fg;
        g_best = particles(i).g;
     end
+    particles(i).update_global_best(g_best, fg_best);
 end
 
 % get initial points of particles
@@ -47,29 +48,45 @@ figure(1);
 subplot(2,2,1);
 surf(x,y,z,'EdgeColor','none'); hold on;
 plot_p1 = scatter3(particle_positions(:,1),particle_positions(:,2),particle_positions(:,3),'.g');
-plot_g1 = scatter3(g_best(1),g_best(2),fg_best,'og');
+plot_g1 = scatter3(g_best(1),g_best(2),fg_best,'or','filled');
+xlabel('x-axis');
+ylabel('y-axis');
+zlabel('z-axis');
 
 subplot(2,2,2);
 surf(x,y,z,'EdgeColor','none'); hold on;
 view(0,90);
 plot_p2 = scatter3(particle_positions(:,1),particle_positions(:,2),particle_positions(:,3),'.g');
-plot_g2 = scatter3(g_best(1),g_best(2),fg_best,'og');
+plot_g2 = scatter3(g_best(1),g_best(2),fg_best,'or','filled');
+xlabel('x-axis');
+ylabel('y-axis');
+zlabel('z-axis');
 
 subplot(2,2,3);
 surf(x,y,z,'EdgeColor','none'); hold on;
 view(0,0);
 plot_p3 = scatter3(particle_positions(:,1),particle_positions(:,2),particle_positions(:,3),'.g');
-plot_g3 = scatter3(g_best(1),g_best(2),fg_best,'og');
+plot_g3 = scatter3(g_best(1),g_best(2),fg_best,'or','filled');
+xlabel('x-axis');
+ylabel('y-axis');
+zlabel('z-axis');
 
 subplot(2,2,4);
 surf(x,y,z,'EdgeColor','none'); hold on;
 view(90,0);
 plot_p4 = scatter3(particle_positions(:,1),particle_positions(:,2),particle_positions(:,3),'.g');
-plot_g4 = scatter3(g_best(1),g_best(2),fg_best,'og');
-
+plot_g4 = scatter3(g_best(1),g_best(2),fg_best,'or','filled');
+xlabel('x-axis');
+ylabel('y-axis');
+zlabel('z-axis');
+waitforbuttonpress();
 
 % main loop
+nframe=50;
+mov(1:nframe)=struct('cdata',[],'colormap',[]);
+set(gca, 'nextplot', 'replacechildren');
 for j = 1:50
+    mov(j)=getframe(gcf);
     for i=1:num_particles
         particles(i).update(omega, phi_p, phi_g);
         if particles(i).fg < fg_best
@@ -79,7 +96,6 @@ for j = 1:50
         particles(i).update_global_best(g_best, fg_best);
         particle_positions(i,:) = [particles(i).x particles(i).fx];
     end
-    pause(0.25)
     set(plot_p1,'XData',particle_positions(:,1),'YData',particle_positions(:,2),'ZData',particle_positions(:,3));
     set(plot_g1,'XData',g_best(1),'YData',g_best(2),'ZData',fg_best);
     set(plot_p2,'XData',particle_positions(:,1),'YData',particle_positions(:,2),'ZData',particle_positions(:,3));
@@ -88,4 +104,6 @@ for j = 1:50
     set(plot_g3,'XData',g_best(1),'YData',g_best(2),'ZData',fg_best);
     set(plot_p4,'XData',particle_positions(:,1),'YData',particle_positions(:,2),'ZData',particle_positions(:,3));
     set(plot_g4,'XData',g_best(1),'YData',g_best(2),'ZData',fg_best);    
+    pause(0.25)
 end
+movie2avi(mov,'test.avi','fps',10,'compression','None');

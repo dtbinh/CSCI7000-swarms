@@ -54,12 +54,12 @@ classdef particle < handle
                 if obj.x(i) < obj.c.lb(i)
                    obj.x(i) = obj.c.lb(i); 
                 end
-                
+
                 if obj.x(i) > obj.c.ub(i)
                     obj.x(i) = obj.c.ub(i);
                 end                
             end
-            
+
            % check if new p
            obj.fx = obj.c.f(obj.x);
            if obj.fx < obj.fp
