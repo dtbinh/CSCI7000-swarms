@@ -6,8 +6,8 @@ clear all;
 %c.f = @func_mccormick; c.lb = [-5, -5]; c.ub = [5, 5];
 %c.f = @func_matyas; c.lb = [-5, -5]; c.ub = [5, 5];
 %c.f = @func_goldsteinprice; c.lb = [-5, -5]; c.ub = [5, 5];
-c.f = @func_ackleys; c.lb = [-5, -5]; c.ub = [5, 5];
-%c.f = @func_eggholder; c.lb = [-500, -500]; c.ub = [500, 500];
+%c.f = @func_ackleys; c.lb = [-5, -5]; c.ub = [5, 5];
+c.f = @func_eggholder; c.lb = [-500, -500]; c.ub = [500, 500];
 
 num_particles = 1000;
 omega = 0.73;

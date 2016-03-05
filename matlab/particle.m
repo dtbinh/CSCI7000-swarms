@@ -7,6 +7,7 @@ classdef particle < handle
 %       c.f     = function handle for function to minimize 
 %       c.lb    = lower bound for search space
 %       c.ub    = upper bound for search space
+%       c.int   = 0 for decimal values, 1 for integer values
         x     % = state vector
         fx    % = c.f evaluated at x
         v     % = velocity vector
@@ -23,6 +24,12 @@ classdef particle < handle
             
             % initialize particle
             obj.x = obj.c.lb + (obj.c.ub - obj.c.lb) .* rand(size(obj.c.lb));
+            
+            % round if only integer values allowed
+            if isfield(obj.c,'int') && obj.c.int == 1
+                obj.x = round(obj.x);
+            end
+            
             obj.p = obj.x;
             obj.fp = obj.c.f(obj.p);
             obj.g = obj.x;
@@ -49,6 +56,12 @@ classdef particle < handle
                            phi_g * rg * (obj.g(i) - obj.x(i));
                 obj.x(i) = obj.x(i) + obj.v(i);
             end
+            
+            % round if only integer values allowed
+            if isfield(obj.c,'int') && obj.c.int == 1
+                obj.x = round(obj.x);
+            end
+            
             % check bounds
             for i=1:max(size(obj.x))    
                 if obj.x(i) < obj.c.lb(i)
@@ -71,10 +84,6 @@ classdef particle < handle
                  obj.fg = obj.fp;
               end
            end
-        end
-        
-        function obj = checkbounds(obj)
-
         end
 
     end
