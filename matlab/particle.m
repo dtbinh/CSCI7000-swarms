@@ -3,11 +3,12 @@ classdef particle < handle
     % https://en.wikipedia.org/wiki/Particle_swarm_optimization
     
     properties
-        c     % = input constants
+        c     % = input constants      
 %       c.f     = function handle for function to minimize 
 %       c.lb    = lower bound for search space
 %       c.ub    = upper bound for search space
 %       c.int   = 0 for decimal values, 1 for integer values
+%       c.s     = sobolset initialization for SO-PSO
         x     % = state vector
         fx    % = c.f evaluated at x
         v     % = velocity vector
@@ -23,7 +24,11 @@ classdef particle < handle
             obj.c = input_struct;
             
             % initialize particle
-            obj.x = obj.c.lb + (obj.c.ub - obj.c.lb) .* rand(size(obj.c.lb));
+            if isfield(obj.c,'s')
+                obj.x = obj.c.s;
+            else
+                obj.x = obj.c.lb + (obj.c.ub - obj.c.lb) .* rand(size(obj.c.lb));
+            end
             
             % round if only integer values allowed
             if isfield(obj.c,'int') && obj.c.int == 1
