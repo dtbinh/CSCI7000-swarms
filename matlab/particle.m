@@ -51,7 +51,7 @@ classdef particle < handle
            end
         end
 
-        function obj = update(obj,omega, phi_p, phi_g)
+        function obj = update(obj,omega, phi_p, phi_g)           
             % update position
             for i = 1:size(obj.x,2)
                 rp = rand();
@@ -91,6 +91,23 @@ classdef particle < handle
            end
         end
 
+        function obj = rndRestart(obj)
+        % random restart of particle
+            
+            if isfield(obj.c,'s')
+                obj.x = obj.c.s;
+            else
+                obj.x = obj.c.lb + (obj.c.ub - obj.c.lb) .* rand(size(obj.c.lb));
+            end
+        
+            obj.x = obj.c.lb + (obj.c.ub - obj.c.lb) .* rand(size(obj.c.lb));
+            obj.p = obj.x;
+            obj.fp = obj.c.f(obj.p);
+            v_bound = abs(obj.c.ub - obj.c.lb);
+            obj.v = -v_bound + 2 * v_bound .* rand(size(obj.c.lb));
+            obj.fx = obj.c.f(obj.x); 
+        end
+        
     end
 end
 
